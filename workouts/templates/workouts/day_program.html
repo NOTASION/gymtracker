@@ -1,0 +1,116 @@
+{% extends 'workouts/base.html' %}
+{% block title %}{{ day.name }} - ثبت تمرین{% endblock %}
+{% block content %}
+<h2>{{ day.name }} &mdash; ثبت تمرین</h2>
+
+<div class="week-nav">
+    <a href="?week={{ prev_week|date:'Y-m-d' }}">&larr; هفته‌ی قبل</a>
+    <span class="current-week">{{ selected_week_jalali }} تا {{ selected_week_end_jalali }}</span>
+    <a href="?week={{ next_week|date:'Y-m-d' }}">هفته‌ی بعد &rarr;</a>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="week_start" value="{{ selected_week|date:'Y-m-d' }}">
+
+    <div class="card" style="overflow-x:auto;">
+        <table class="workout-table">
+            <thead>
+                <tr>
+                    <th>نام حرکت</th>
+                    <th>وزنه (kg) / مدت (ثانیه)</th>
+                    <th>ست ۱</th>
+                    <th>ست ۲</th>
+                    <th>ست ۳</th>
+                    <th>ست ۴</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td style="text-align:right;">
+                        {{ row.exercise.name }}
+                        <div class="day-tag">{{ row.exercise.get_exercise_type_display }}</div>
+                    </td>
+                    {% if row.exercise.exercise_type == 'weight' %}
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input class="weight-input" type="number" step="0.5" min="0"
+                                name="weight_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.weight }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">kg</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="reps1_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.reps_set1 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="reps2_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.reps_set2 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="reps3_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.reps_set3 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="reps4_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.reps_set4 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td>—</td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="dur1_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.duration_set1 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">s</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="dur2_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.duration_set2 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">s</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="dur3_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.duration_set3 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">s</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <input type="number" min="0" name="dur4_{{ row.exercise.id }}"
+                                value="{% if row.log %}{{ row.log.duration_set4 }}{% endif %}">
+                            <span style="font-size:11px; color:#6b7280;">s</span>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn">ذخیره‌ی این هفته</button>
+</form>
+
+<p style="margin-top:16px;">
+    <a href="{% url 'manage_exercises' day.id %}">+ افزودن/حذف حرکت</a> |
+    <a href="{% url 'day_select' %}">بازگشت به لیست روزها</a>
+</p>
+{% endblock %}

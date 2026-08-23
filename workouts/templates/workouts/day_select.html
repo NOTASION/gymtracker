@@ -1,0 +1,37 @@
+{% extends 'workouts/base.html' %}
+{% block title %}روزهای تمرینی{% endblock %}
+{% block content %}
+<h2>روزهای تمرینی‌ات</h2>
+
+<div class="day-grid">
+    {% for day in days %}
+    <div class="day-card">
+        <h3>{{ day.obj.name }}</h3>
+        <div class="count">{{ day.exercise_count }} حرکت ثبت‌شده</div>
+        <div style="margin-top: 12px; display: flex; gap: 10px;">
+            <a href="{% url 'day_program' day.obj.id %}" class="btn">شروع تمرین</a>
+        </div>
+        <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="{% url 'manage_exercises' day.obj.id %}" class="manage-link">+ مدیریت حرکات</a>
+            <form method="post" action="{% url 'delete_day' day.obj.id %}"
+                  onsubmit="return confirm('روز «{{ day.obj.name }}» و همه‌ی حرکات و سوابق آن حذف شود؟');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="padding:4px 10px; font-size:12px;">حذف روز</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card" style="max-width:400px; margin-top:24px;">
+    <h3>افزودن روز تمرینی جدید</h3>
+    <form method="post" action="{% url 'create_day' %}">
+        {% csrf_token %}
+        <div class="form-row">
+            <label>نام روز</label>
+            <input type="text" name="name" class="input" placeholder="مثلاً: روز ۵ یا سینه و سه‌سر" required>
+        </div>
+        <button type="submit" class="btn">افزودن روز</button>
+    </form>
+</div>
+{% endblock %}

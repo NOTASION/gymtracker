@@ -1,0 +1,42 @@
+{% extends 'workouts/base.html' %}
+{% block title %}مدیریت حرکات {{ day.name }}{% endblock %}
+{% block content %}
+<h2>مدیریت حرکات - {{ day.name }}</h2>
+
+<div class="card">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+        <div class="form-row">
+            {{ form.exercise_type.label_tag }}
+            {{ form.exercise_type }}
+        </div>
+        <button type="submit" class="btn">افزودن حرکت</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>حرکات این روز</h3>
+    {% if exercises %}
+    <ul class="exercise-list">
+        {% for exercise in exercises %}
+        <li>
+            <span>{{ exercise.name }} <span class="day-tag">({{ exercise.get_exercise_type_display }})</span></span>
+            <form method="post" action="{% url 'delete_exercise' exercise.id %}"
+                  onsubmit="return confirm('حرکت «{{ exercise.name }}» حذف شود؟ تمام رکوردهای آن هم پاک می‌شود.');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">حذف</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>هنوز حرکتی برای این روز اضافه نشده.</p>
+    {% endif %}
+</div>
+
+<a href="{% url 'day_select' %}">&larr; بازگشت به لیست روزها</a>
+{% endblock %}

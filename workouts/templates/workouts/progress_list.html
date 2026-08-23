@@ -1,0 +1,19 @@
+{% extends 'workouts/base.html' %}
+{% block title %}نمودار پیشرفت{% endblock %}
+{% block content %}
+<h2>نمودار پیشرفت وزنه</h2>
+<p>یک حرکت را انتخاب کن تا روند افزایش وزنه‌ی آن در طول هفته‌ها را ببینی.</p>
+
+{% if exercises %}
+<div class="exercise-grid">
+    {% for exercise in exercises %}
+    <a class="exercise-link" href="{% url 'progress_chart' exercise.id %}">
+        <div>{{ exercise.name }}</div>
+        <div class="day-tag">{{ exercise.workout_day.name }} — {{ exercise.get_exercise_type_display }}</div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p>هنوز هیچ حرکتی اضافه نکرده‌ای.</p>
+{% endif %}
+{% endblock %}

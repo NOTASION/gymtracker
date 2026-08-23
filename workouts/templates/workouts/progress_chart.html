@@ -1,0 +1,107 @@
+{% extends 'workouts/base.html' %}
+{% block title %}پیشرفت {{ exercise.name }}{% endblock %}
+{% block content %}
+<h2>روند پیشرفت: {{ exercise.name }}</h2>
+<p class="day-tag">{{ exercise.workout_day.name }} — {{ exercise.get_exercise_type_display }}</p>
+
+<div class="card">
+    <div id="chartWrap" style="overflow-x:auto;"></div>
+    <div id="legendWrap" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; font-size:13px;"></div>
+    <p id="noDataMsg" style="display:none; text-align:center; color:#6b7280;">
+        هنوز داده‌ای برای این حرکت ثبت نشده.
+    </p>
+</div>
+
+<a href="{% url 'progress_list' %}">&larr; بازگشت به لیست حرکات</a>
+
+<script>
+const COLORS = ['#2563eb', '#dc2626', '#16a34a', '#d97706'];
+
+fetch("{% url 'progress_data' exercise.id %}")
+    .then(res => res.json())
+    .then(data => {
+        if (!data.labels.length || !data.series.length) {
+            document.getElementById('noDataMsg').style.display = 'block';
+            return;
+        }
+
+        const labels = data.labels;
+        const series = data.series;
+
+        const width = Math.max(560, labels.length * 110);
+        const height = 380;
+        const padding = { top: 36, right: 30, bottom: 60, left: 55 };
+        const chartW = width - padding.left - padding.right;
+        const chartH = height - padding.top - padding.bottom;
+
+        const allValues = series.flatMap(s => s.values.filter(v => v !== null && v !== undefined));
+        const minV = Math.min(...allValues);
+        const maxV = Math.max(...allValues);
+        const range = (maxV - minV) || 1;
+        const yMin = Math.max(0, minV - range * 0.2);
+        const yMax = maxV + range * 0.2;
+
+        const xStep = labels.length > 1 ? chartW / (labels.length - 1) : 0;
+
+        function xPos(i) { return padding.left + i * xStep; }
+        function yPos(v) {
+            return padding.top + chartH - ((v - yMin) / (yMax - yMin)) * chartH;
+        }
+        function fmt(v) {
+            return Number.isInteger(v) ? v : v.toFixed(1);
+        }
+
+        let gridLines = '';
+        let yLabels = '';
+        for (let i = 0; i <= 4; i++) {
+            const v = yMin + (yMax - yMin) * (i / 4);
+            const y = yPos(v);
+            gridLines += `<line x1="${padding.left}" y1="${y}" x2="${padding.left + chartW}" y2="${y}" stroke="#e5e7eb" stroke-width="1" />`;
+            yLabels += `<text x="${padding.left - 10}" y="${y + 4}" font-size="12" fill="#6b7280" text-anchor="end">${fmt(v)}</text>`;
+        }
+
+        let xLabels = '';
+        labels.forEach((lab, i) => {
+            xLabels += `<text x="${xPos(i)}" y="${height - padding.bottom + 22}" font-size="12" fill="#6b7280" text-anchor="middle">${lab}</text>`;
+        });
+
+        let seriesSvg = '';
+        let legendHtml = '';
+        series.forEach((s, si) => {
+            const color = COLORS[si % COLORS.length];
+            let points = [];
+            let labelsSvg = '';
+            s.values.forEach((v, i) => {
+                if (v === null || v === undefined) return;
+                const x = xPos(i);
+                const y = yPos(v);
+                points.push(`${x},${y}`);
+                const text = fmt(v);
+                const boxW = text.length * 7 + 8;
+                labelsSvg += `
+                    <rect x="${x - boxW/2}" y="${y - 26}" width="${boxW}" height="16" rx="4" fill="white" fill-opacity="0.9" />
+                    <text x="${x}" y="${y - 14}" font-size="12" font-weight="bold" fill="${color}" text-anchor="middle">${text}</text>
+                    <circle cx="${x}" cy="${y}" r="4.5" fill="${color}" stroke="#fff" stroke-width="1.5" />
+                `;
+            });
+            seriesSvg += `<polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" />${labelsSvg}`;
+            legendHtml += `<span style="display:flex;align-items:center;gap:5px;">
+                <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;"></span>
+                ${s.name}
+            </span>`;
+        });
+
+        const svg = `
+        <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="font-family: Tahoma, sans-serif;">
+            ${gridLines}
+            ${yLabels}
+            ${seriesSvg}
+            ${xLabels}
+            <text x="${padding.left}" y="18" font-size="13" fill="#374151" font-weight="bold">${data.unit} - ${data.exercise_name}</text>
+        </svg>`;
+
+        document.getElementById('chartWrap').innerHTML = svg;
+        document.getElementById('legendWrap').innerHTML = legendHtml;
+    });
+</script>
+{% endblock %}
