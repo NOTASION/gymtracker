@@ -4,23 +4,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0b">
 <title>{% block title %}برنامه تمرینی{% endblock %}</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
 <link rel="stylesheet" href="{% static 'workouts/css/style.css' %}">
 </head>
 <body>
 <nav class="navbar">
     <div class="nav-inner">
-        <a href="{% url 'day_select' %}" class="brand">🏋️ برنامه تمرینی</a>
+        <a href="{% url 'day_select' %}" class="brand">
+            <span class="brand-text">برنامه تمرینی</span>
+        </a>
         {% if user.is_authenticated %}
-        <div class="nav-links">
-            <a href="{% url 'day_select' %}">روزها</a>
-            <a href="{% url 'progress_list' %}">نمودار پیشرفت</a>
-            <a href="{% url 'export_excel' %}">خروجی اکسل</a>
-            <span class="nav-user">{{ user.username }}</span>
-            <form action="{% url 'logout' %}" method="post" class="inline-form">
-                {% csrf_token %}
-                <button type="submit" class="link-btn">خروج</button>
-            </form>
+        <button class="nav-toggle" aria-label="منو" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links-wrap">
+            <div class="nav-links">
+                <a href="{% url 'day_select' %}">روزها</a>
+                <a href="{% url 'progress_list' %}">نمودار پیشرفت</a>
+                <a href="{% url 'export_excel' %}">خروجی اکسل</a>
+            </div>
+            <div class="nav-actions">
+                <span class="nav-user">{{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="link-btn">خروج</button>
+                </form>
+            </div>
         </div>
         {% endif %}
     </div>
@@ -35,5 +47,18 @@
 
     {% block content %}{% endblock %}
 </div>
+
+<script>
+(function() {
+    var toggle = document.querySelector('.nav-toggle');
+    var wrap = document.querySelector('.nav-links-wrap');
+    if (!toggle || !wrap) return;
+    toggle.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        wrap.classList.toggle('open');
+    });
+})();
+</script>
 </body>
 </html>
