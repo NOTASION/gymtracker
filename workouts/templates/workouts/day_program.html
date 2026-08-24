@@ -13,7 +13,8 @@
     {% csrf_token %}
     <input type="hidden" name="week_start" value="{{ selected_week|date:'Y-m-d' }}">
 
-    <div class="card" style="overflow-x:auto;">
+    {# ===== Desktop: Table layout ===== #}
+    <div class="card desktop-logger" style="overflow-x:auto;">
         <table class="workout-table">
             <thead>
                 <tr>
@@ -38,35 +39,35 @@
                             <input class="weight-input" type="number" step="0.5" min="0"
                                 name="weight_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.weight }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">kg</span>
+                            <span style="font-size:11px; color:#6b6b75;">kg</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="reps1_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.reps_set1 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                            <span style="font-size:11px; color:#6b6b75;">تکرار</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="reps2_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.reps_set2 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                            <span style="font-size:11px; color:#6b6b75;">تکرار</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="reps3_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.reps_set3 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                            <span style="font-size:11px; color:#6b6b75;">تکرار</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="reps4_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.reps_set4 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">تکرار</span>
+                            <span style="font-size:11px; color:#6b6b75;">تکرار</span>
                         </div>
                     </td>
                     {% else %}
@@ -75,28 +76,28 @@
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="dur1_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.duration_set1 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">s</span>
+                            <span style="font-size:11px; color:#6b6b75;">s</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="dur2_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.duration_set2 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">s</span>
+                            <span style="font-size:11px; color:#6b6b75;">s</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="dur3_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.duration_set3 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">s</span>
+                            <span style="font-size:11px; color:#6b6b75;">s</span>
                         </div>
                     </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="dur4_{{ row.exercise.id }}"
                                 value="{% if row.log %}{{ row.log.duration_set4 }}{% endif %}">
-                            <span style="font-size:11px; color:#6b7280;">s</span>
+                            <span style="font-size:11px; color:#6b6b75;">s</span>
                         </div>
                     </td>
                     {% endif %}
@@ -106,10 +107,117 @@
         </table>
     </div>
 
-    <button type="submit" class="btn">ذخیره‌ی این هفته</button>
+    {# ===== Mobile: Card layout ===== #}
+    <div class="mobile-logger">
+        {% for row in rows %}
+        <div class="ex-card">
+            <div class="ex-card-header">
+                <span class="ex-name">{{ row.exercise.name }}</span>
+                <span class="day-tag">{{ row.exercise.get_exercise_type_display }}</span>
+            </div>
+
+            {% if row.exercise.exercise_type == 'weight' %}
+            <div class="ex-weight-row">
+                <div class="ex-field">
+                    <div class="ex-field-label">وزنه (kg)</div>
+                    <input class="ex-input-lg" type="number" step="0.5" min="0"
+                        name="weight_{{ row.exercise.id }}"
+                        value="{% if row.log %}{{ row.log.weight }}{% endif %}"
+                        placeholder="۰">
+                </div>
+            </div>
+            <div class="sets-list">
+                <div class="set-item">
+                    <span class="set-num">۱</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="reps1_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.reps_set1 }}{% endif %}"
+                            placeholder="تکرار">
+                        <span class="set-unit">تکرار</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۲</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="reps2_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.reps_set2 }}{% endif %}"
+                            placeholder="تکرار">
+                        <span class="set-unit">تکرار</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۳</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="reps3_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.reps_set3 }}{% endif %}"
+                            placeholder="تکرار">
+                        <span class="set-unit">تکرار</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۴</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="reps4_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.reps_set4 }}{% endif %}"
+                            placeholder="تکرار">
+                        <span class="set-unit">تکرار</span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="sets-list">
+                <div class="set-item">
+                    <span class="set-num">۱</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="dur1_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.duration_set1 }}{% endif %}"
+                            placeholder="ثانیه">
+                        <span class="set-unit">s</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۲</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="dur2_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.duration_set2 }}{% endif %}"
+                            placeholder="ثانیه">
+                        <span class="set-unit">s</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۳</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="dur3_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.duration_set3 }}{% endif %}"
+                            placeholder="ثانیه">
+                        <span class="set-unit">s</span>
+                    </div>
+                </div>
+                <div class="set-item">
+                    <span class="set-num">۴</span>
+                    <div class="set-input-wrap">
+                        <input type="number" min="0" name="dur4_{{ row.exercise.id }}"
+                            value="{% if row.log %}{{ row.log.duration_set4 }}{% endif %}"
+                            placeholder="ثانیه">
+                        <span class="set-unit">s</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {# Desktop save button #}
+    <button type="submit" class="btn desktop-logger" style="margin-top: 16px;">ذخیره‌ی این هفته</button>
+
+    {# Mobile sticky save bar #}
+    <div class="save-bar">
+        <button type="submit" class="btn">ذخیره‌ی این هفته</button>
+    </div>
 </form>
 
-<p style="margin-top:16px;">
+<p class="logger-footer-links">
     <a href="{% url 'manage_exercises' day.id %}">+ افزودن/حذف حرکت</a> |
     <a href="{% url 'day_select' %}">بازگشت به لیست روزها</a>
 </p>
