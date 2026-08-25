@@ -513,8 +513,9 @@ table.workout-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
 table.workout-table th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
 table.workout-table td {
   border-bottom: 1px solid var(--border);
-  padding: 12px 8px;
+  padding: 14px 8px;
   text-align: center;
+  vertical-align: middle;
   font-size: 0.88rem;
   color: var(--text-secondary);
 }
@@ -556,6 +557,82 @@ table.workout-table input.weight-input { width: 80px; }
 }
 .exercise-list li:last-child { border-bottom: none; }
 .exercise-list li span span.day-tag { margin-right: 6px; }
+
+/* ===== Exercise Manager ===== */
+.exmgr-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.exmgr-header h2 { margin-bottom: 4px; }
+.exmgr-header .subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.exmgr-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+}
+
+.exmgr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exmgr-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  transition: border-color var(--transition), transform var(--transition);
+  animation: fadeInUp 0.3s ease both;
+}
+.exmgr-item:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-1px);
+}
+
+.exmgr-item-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.exmgr-item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exmgr-delete-btn {
+  padding: 7px 16px;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.exmgr-back {
+  display: inline-block;
+  margin-top: 16px;
+  margin-left: 16px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+.exmgr-back:first-of-type { margin-left: 0; }
+.exmgr-back:hover { color: var(--accent-text); }
 
 /* ===== Exercise Grid (progress) ===== */
 .exercise-grid {
@@ -785,6 +862,21 @@ table.workout-table input.weight-input { width: 80px; }
     gap: 12px;
   }
   .day-add-btn { align-self: flex-start; }
+  .exmgr-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .exmgr-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .exmgr-item {
+    padding: 14px 16px;
+  }
+  .exmgr-back {
+    display: block;
+    margin-left: 0;
+    margin-top: 12px;
+  }
 
   .nav-links-wrap {
     position: absolute;

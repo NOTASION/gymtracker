@@ -29,9 +29,11 @@
             <tbody>
                 {% for row in rows %}
                 <tr>
-                    <td style="text-align:right;">
-                        {{ row.exercise.name }}
-                        <div class="day-tag">{{ row.exercise.get_exercise_type_display }}</div>
+                    <td style="text-align:right; vertical-align:middle;">
+                        <div style="display:flex; flex-direction:column; gap:3px;">
+                            {{ row.exercise.name }}
+                            <span class="day-tag" style="align-self:flex-start;">{{ row.exercise.get_exercise_type_display }}</span>
+                        </div>
                     </td>
                     {% if row.exercise.exercise_type == 'weight' %}
                     <td>
@@ -71,7 +73,11 @@
                         </div>
                     </td>
                     {% else %}
-                    <td>—</td>
+                    <td style="vertical-align:middle;">
+                        <div style="display:flex; align-items:center; justify-content:center;">
+                            <span style="color:var(--text-muted);">—</span>
+                        </div>
+                    </td>
                     <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                             <input type="number" min="0" name="dur1_{{ row.exercise.id }}"

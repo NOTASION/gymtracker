@@ -1,42 +1,77 @@
 {% extends 'workouts/base.html' %}
-{% block title %}مدیریت حرکات {{ day.name }}{% endblock %}
+{% block title %}مدیریت حرکات - {{ day.name }}{% endblock %}
 {% block content %}
-<h2>مدیریت حرکات - {{ day.name }}</h2>
 
-<div class="card">
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-row">
-            {{ form.name.label_tag }}
-            {{ form.name }}
-        </div>
-        <div class="form-row">
-            {{ form.exercise_type.label_tag }}
-            {{ form.exercise_type }}
-        </div>
-        <button type="submit" class="btn">افزودن حرکت</button>
-    </form>
+<div class="exmgr-header">
+    <div>
+        <h2>مدیریت حرکات</h2>
+        <p class="subtitle">{{ day.name }} — حرکات این روز را اضافه یا حذف کن</p>
+    </div>
+    <button class="day-add-btn" id="exAddToggle" type="button" aria-expanded="false">
+        <span>+ حرکت جدید</span>
+    </button>
 </div>
 
-<div class="card">
-    <h3>حرکات این روز</h3>
-    {% if exercises %}
-    <ul class="exercise-list">
-        {% for exercise in exercises %}
-        <li>
-            <span>{{ exercise.name }} <span class="day-tag">({{ exercise.get_exercise_type_display }})</span></span>
-            <form method="post" action="{% url 'delete_exercise' exercise.id %}"
-                  onsubmit="return confirm('حرکت «{{ exercise.name }}» حذف شود؟ تمام رکوردهای آن هم پاک می‌شود.');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">حذف</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
+<div class="day-add-panel" id="exAddPanel">
+    <div class="card" style="margin-bottom: 0;">
+        <form method="post">
+            {% csrf_token %}
+            <div class="exmgr-form-grid">
+                <div class="form-row" style="margin-bottom: 0;">
+                    <label>{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-row" style="margin-bottom: 0;">
+                    <label>{{ form.exercise_type.label }}</label>
+                    {{ form.exercise_type }}
+                </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">افزودن حرکت</button>
+        </form>
+    </div>
+</div>
+
+{% if exercises %}
+<div class="exmgr-list">
+    {% for exercise in exercises %}
+    <div class="exmgr-item">
+        <div class="exmgr-item-info">
+            <span class="exmgr-item-name">{{ exercise.name }}</span>
+            <span class="day-tag">{{ exercise.get_exercise_type_display }}</span>
+        </div>
+        <form method="post" action="{% url 'delete_exercise' exercise.id %}"
+              onsubmit="return confirm('حرکت «{{ exercise.name }}» حذف شود؟ تمام رکوردهای آن هم پاک می‌شود.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger exmgr-delete-btn">حذف</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card day-empty">
+    <div class="day-empty-icon">&#9881;</div>
     <p>هنوز حرکتی برای این روز اضافه نشده.</p>
-    {% endif %}
+    <button class="btn" type="button" onclick="document.getElementById('exAddToggle').click();">اولین حرکت را اضافه کن</button>
 </div>
+{% endif %}
 
-<a href="{% url 'day_select' %}">&larr; بازگشت به لیست روزها</a>
+<a href="{% url 'day_program' day.id %}" class="exmgr-back">&larr; بازگشت به تمرین</a>
+<a href="{% url 'day_select' %}" class="exmgr-back">بازگشت به لیست روزها</a>
+
+<script>
+(function() {
+    var toggle = document.getElementById('exAddToggle');
+    var panel = document.getElementById('exAddPanel');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        panel.classList.toggle('open');
+        if (!expanded) {
+            var input = panel.querySelector('input[type="text"]');
+            if (input) setTimeout(function() { input.focus(); }, 350);
+        }
+    });
+})();
+</script>
 {% endblock %}
