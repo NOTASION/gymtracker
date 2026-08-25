@@ -5,11 +5,13 @@
   --bg-tertiary: #1c1c20;
   --bg-elevated: #242429;
 
-  --accent: #b8a07a;
-  --accent-hover: #c7b08a;
-  --accent-active: #a89272;
-  --accent-muted: rgba(184, 160, 122, 0.08);
-  --accent-glow: rgba(184, 160, 122, 0.10);
+  --accent: #341C57;
+  --accent-hover: #45276e;
+  --accent-active: #2a1647;
+  --accent-muted: rgba(52, 28, 87, 0.25);
+  --accent-glow: rgba(52, 28, 87, 0.20);
+  --accent-soft: rgba(52, 28, 87, 0.12);
+  --accent-text: #a78bcc;
 
   --text-primary: #ededed;
   --text-secondary: #9b9ba4;
@@ -17,7 +19,7 @@
 
   --border: rgba(255, 255, 255, 0.07);
   --border-hover: rgba(255, 255, 255, 0.14);
-  --border-accent: rgba(184, 160, 122, 0.30);
+  --border-accent: rgba(52, 28, 87, 0.50);
 
   --success: #34d399;
   --success-bg: rgba(52, 211, 153, 0.08);
@@ -57,8 +59,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
-a:hover { color: var(--accent-hover); }
+a { color: var(--accent-text); text-decoration: none; transition: color var(--transition); }
+a:hover { color: #c4a4e0; }
 
 ::selection { background: var(--accent-muted); color: var(--text-primary); }
 
@@ -112,8 +114,8 @@ p { color: var(--text-secondary); }
   gap: 8px;
   transition: color var(--transition);
 }
-.brand:hover { color: var(--accent); }
-.brand-text { background: linear-gradient(135deg, var(--text-primary), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.brand:hover { color: var(--accent-text); }
+.brand-text { background: linear-gradient(135deg, var(--text-primary), var(--accent-text)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
 .nav-toggle {
   display: none;
@@ -164,7 +166,7 @@ p { color: var(--text-secondary); }
   right: 0;
   width: 0;
   height: 2px;
-  background: var(--accent);
+  background: var(--accent-text);
   border-radius: 2px;
   transition: width var(--transition);
 }
@@ -199,7 +201,7 @@ p { color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   background: var(--accent);
-  color: #0a0a0b;
+  color: #fff;
   border: none;
   padding: 11px 22px;
   border-radius: var(--radius-sm);
@@ -211,7 +213,7 @@ p { color: var(--text-secondary); }
   transition: background var(--transition), transform 0.1s ease, box-shadow var(--transition);
   -webkit-tap-highlight-color: transparent;
 }
-.btn:hover { background: var(--accent-hover); color: #0a0a0b; box-shadow: 0 0 20px var(--accent-glow); }
+.btn:hover { background: var(--accent-hover); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
 .btn:active { transform: scale(0.97); }
 
 .btn-danger { background: rgba(248, 113, 113, 0.12); color: var(--error); border: 1px solid rgba(248,113,113,0.2); }
@@ -300,7 +302,54 @@ select.input {
 .alert-info { background: var(--info-bg); color: var(--info); border-color: rgba(96,165,250,0.15); }
 .alert-warning { background: var(--warning-bg); color: var(--warning); border-color: rgba(251,191,36,0.15); }
 
-/* ===== Day Grid ===== */
+/* ===== Day Selection ===== */
+.day-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.day-page-header h2 { margin-bottom: 4px; }
+.day-page-header .subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.day-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-text);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.day-add-btn:hover { background: var(--accent-muted); color: #c4a4e0; }
+.day-add-btn:active { transform: scale(0.97); }
+
+.day-add-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--transition-slow), opacity var(--transition), margin var(--transition);
+  margin-bottom: 0;
+}
+.day-add-panel.open {
+  max-height: 200px;
+  opacity: 1;
+  margin-bottom: 20px;
+}
+
 .day-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -317,12 +366,26 @@ select.input {
   color: var(--text-primary);
   transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
   animation: fadeInUp 0.4s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.day-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity var(--transition);
 }
 .day-card:hover {
   border-color: var(--border-accent);
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
+.day-card:hover::before { opacity: 1; }
 .day-card:nth-child(2) { animation-delay: 0.06s; }
 .day-card:nth-child(3) { animation-delay: 0.12s; }
 .day-card:nth-child(4) { animation-delay: 0.18s; }
@@ -331,14 +394,66 @@ select.input {
 .day-card:nth-child(7) { animation-delay: 0.36s; }
 .day-card:nth-child(8) { animation-delay: 0.42s; }
 
-.day-card h3 { margin-bottom: 6px; font-size: 1.1rem; }
-.day-card .count { color: var(--text-muted); font-size: 0.85rem; }
-.day-card .manage-link {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 0.82rem;
-  color: var(--accent);
+.day-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
+.day-card h3 { margin-bottom: 6px; font-size: 1.1rem; }
+.day-card .count {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.day-card .count-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-text);
+  opacity: 0.5;
+}
+.day-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.day-card-actions .btn { padding: 9px 18px; font-size: 0.85rem; }
+.day-card .manage-link {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.day-card .manage-link:hover {
+  color: var(--accent-text);
+  border-color: var(--border-accent);
+  background: var(--accent-soft);
+}
+.day-card-delete {
+  margin-left: auto;
+}
+.day-card-delete .btn-danger {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+.day-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.day-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.3;
+}
+.day-empty p { color: var(--text-muted); margin-bottom: 16px; }
 
 /* ===== Day Tag (badge) ===== */
 .day-tag {
@@ -370,7 +485,7 @@ select.input {
   transition: all var(--transition);
   white-space: nowrap;
 }
-.week-nav a:hover { color: var(--accent); background: var(--accent-muted); }
+.week-nav a:hover { color: var(--accent-text); background: var(--accent-soft); }
 .week-nav .current-week {
   font-weight: 600;
   color: var(--text-primary);
@@ -558,8 +673,8 @@ table.workout-table input.weight-input { width: 80px; }
   min-width: 28px;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-muted);
+  color: var(--accent-text);
+  background: var(--accent-soft);
   border-radius: 6px;
   flex-shrink: 0;
 }
@@ -612,7 +727,7 @@ table.workout-table input.weight-input { width: 80px; }
   font-size: 0.88rem;
 }
 .logger-footer-links a { color: var(--text-secondary); }
-.logger-footer-links a:hover { color: var(--accent); }
+.logger-footer-links a:hover { color: var(--accent-text); }
 
 /* ===== Chart ===== */
 #chartWrap svg text { fill: var(--text-secondary); }
@@ -665,6 +780,12 @@ table.workout-table input.weight-input { width: 80px; }
   .week-nav .current-week { font-size: 0.82rem; }
 
   .nav-toggle { display: flex; }
+  .day-page-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .day-add-btn { align-self: flex-start; }
+
   .nav-links-wrap {
     position: absolute;
     top: var(--nav-height);

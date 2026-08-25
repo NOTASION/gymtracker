@@ -1,37 +1,79 @@
 {% extends 'workouts/base.html' %}
 {% block title %}روزهای تمرینی{% endblock %}
 {% block content %}
-<h2>روزهای تمرینی‌ات</h2>
 
+<div class="day-page-header">
+    <div>
+        <h2>روزهای تمرینی</h2>
+        <p class="subtitle">یک روز را انتخاب کن و تمرینت را ثبت کن</p>
+    </div>
+    <button class="day-add-btn" id="dayAddToggle" type="button" aria-expanded="false">
+        <span>+ روز جدید</span>
+    </button>
+</div>
+
+<div class="day-add-panel" id="dayAddPanel">
+    <div class="card" style="margin-bottom: 0;">
+        <form method="post" action="{% url 'create_day' %}">
+            {% csrf_token %}
+            <div class="form-row">
+                <label>نام روز</label>
+                <input type="text" name="name" class="input" placeholder="مثلاً: روز ۵ یا سینه و سه‌سر" required>
+            </div>
+            <button type="submit" class="btn">افزودن روز</button>
+        </form>
+    </div>
+</div>
+
+{% if days %}
 <div class="day-grid">
     {% for day in days %}
     <div class="day-card">
-        <h3>{{ day.obj.name }}</h3>
-        <div class="count">{{ day.exercise_count }} حرکت ثبت‌شده</div>
-        <div style="margin-top: 12px; display: flex; gap: 10px;">
-            <a href="{% url 'day_program' day.obj.id %}" class="btn">شروع تمرین</a>
+        <div class="day-card-top">
+            <div>
+                <h3>{{ day.obj.name }}</h3>
+                <div class="count">
+                    <span class="count-dot"></span>
+                    {{ day.exercise_count }} حرکت
+                </div>
+            </div>
         </div>
-        <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center;">
-            <a href="{% url 'manage_exercises' day.obj.id %}" class="manage-link">+ مدیریت حرکات</a>
-            <form method="post" action="{% url 'delete_day' day.obj.id %}"
-                  onsubmit="return confirm('روز «{{ day.obj.name }}» و همه‌ی حرکات و سوابق آن حذف شود؟');">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" style="padding:4px 10px; font-size:12px;">حذف روز</button>
-            </form>
+        <div class="day-card-actions">
+            <a href="{% url 'day_program' day.obj.id %}" class="btn">شروع تمرین</a>
+            <a href="{% url 'manage_exercises' day.obj.id %}" class="manage-link">مدیریت حرکات</a>
+            <div class="day-card-delete">
+                <form method="post" action="{% url 'delete_day' day.obj.id %}"
+                      onsubmit="return confirm('روز «{{ day.obj.name }}» و همه‌ی حرکات و سوابق آن حذف شود؟');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
         </div>
     </div>
     {% endfor %}
 </div>
-
-<div class="card" style="max-width:400px; margin-top:24px;">
-    <h3>افزودن روز تمرینی جدید</h3>
-    <form method="post" action="{% url 'create_day' %}">
-        {% csrf_token %}
-        <div class="form-row">
-            <label>نام روز</label>
-            <input type="text" name="name" class="input" placeholder="مثلاً: روز ۵ یا سینه و سه‌سر" required>
-        </div>
-        <button type="submit" class="btn">افزودن روز</button>
-    </form>
+{% else %}
+<div class="card day-empty">
+    <div class="day-empty-icon">&#9881;</div>
+    <p>هنوز روز تمرینی‌ای نساخته‌ای.</p>
+    <button class="btn" type="button" onclick="document.getElementById('dayAddToggle').click();">اولین روزت را بساز</button>
 </div>
+{% endif %}
+
+<script>
+(function() {
+    var toggle = document.getElementById('dayAddToggle');
+    var panel = document.getElementById('dayAddPanel');
+    if (!toggle || !panel) return;
+    toggle.addEventListener('click', function() {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        panel.classList.toggle('open');
+        if (!expanded) {
+            var input = panel.querySelector('input[name="name"]');
+            if (input) setTimeout(function() { input.focus(); }, 350);
+        }
+    });
+})();
+</script>
 {% endblock %}
