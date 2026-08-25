@@ -1,24 +1,32 @@
 {% extends 'workouts/base.html' %}
 {% block title %}ورود{% endblock %}
 {% block content %}
-<div class="card" style="max-width:400px; margin:40px auto;">
-    <h2>ورود به حساب</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="form-row">
-            <label>{{ field.label }}</label>
-            {{ field }}
-            {% for error in field.errors %}
-                <div class="alert alert-error">{{ error }}</div>
-            {% endfor %}
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <span class="auth-brand-text">برنامه تمرینی</span>
         </div>
-        {% endfor %}
-        {% if form.non_field_errors %}
-            <div class="alert alert-error">{{ form.non_field_errors }}</div>
-        {% endif %}
-        <button type="submit" class="btn" style="width:100%;">ورود</button>
-    </form>
-    <p style="margin-top:14px;">حساب نداری؟ <a href="{% url 'signup' %}">ثبت‌نام کن</a></p>
+        <h2 class="auth-title">ورود به حساب</h2>
+        <p class="auth-subtitle">خوش آمدی — وارد شو و تمرینت را ادامه بده</p>
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="auth-field">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <div class="alert alert-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <button type="submit" class="btn auth-submit">ورود</button>
+        </form>
+
+        <p class="auth-switch">حساب نداری؟ <a href="{% url 'signup' %}">ثبت‌نام کن</a></p>
+    </div>
 </div>
 {% endblock %}

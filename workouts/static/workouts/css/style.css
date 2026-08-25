@@ -806,6 +806,124 @@ table.workout-table input.weight-input { width: 80px; }
 .logger-footer-links a { color: var(--text-secondary); }
 .logger-footer-links a:hover { color: var(--accent-text); }
 
+/* ===== Auth Pages ===== */
+.auth-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--nav-height) - 48px);
+  padding: 20px 0;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px 32px;
+  animation: authSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.6;
+}
+
+.auth-brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-brand-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-text));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-title {
+  font-size: 1.35rem;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.auth-subtitle {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.auth-field label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.auth-field input {
+  width: 100%;
+  padding: 13px 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+  -webkit-appearance: none;
+}
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--border-accent);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.auth-field input::placeholder { color: var(--text-muted); }
+
+.auth-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.auth-submit {
+  width: 100%;
+  padding: 13px;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.auth-switch a { font-weight: 600; }
+
+@keyframes authSlideIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ===== Chart ===== */
 #chartWrap svg text { fill: var(--text-secondary); }
 #legendWrap span { color: var(--text-secondary); }
@@ -877,6 +995,13 @@ table.workout-table input.weight-input { width: 80px; }
     margin-left: 0;
     margin-top: 12px;
   }
+
+  .auth-card {
+    padding: 28px 22px 24px;
+    margin: 0 4px;
+  }
+  .auth-title { font-size: 1.2rem; }
+  .auth-brand-text { font-size: 1.15rem; }
 
   .nav-links-wrap {
     position: absolute;
