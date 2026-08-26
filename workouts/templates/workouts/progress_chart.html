@@ -12,7 +12,7 @@
     </p>
 </div>
 
-<a href="{% url 'progress_list' %}">&larr; بازگشت به لیست حرکات</a>
+<a href="{% url 'progress_list' %}" class="progress-back">&larr; بازگشت به لیست حرکات</a>
 
 <script>
 const COLORS = ['#341C57', '#dc2626', '#16a34a', '#d97706'];
@@ -56,13 +56,13 @@ fetch("{% url 'progress_data' exercise.id %}")
         for (let i = 0; i <= 4; i++) {
             const v = yMin + (yMax - yMin) * (i / 4);
             const y = yPos(v);
-            gridLines += `<line x1="${padding.left}" y1="${y}" x2="${padding.left + chartW}" y2="${y}" stroke="#e5e7eb" stroke-width="1" />`;
-            yLabels += `<text x="${padding.left - 10}" y="${y + 4}" font-size="12" fill="#6b7280" text-anchor="end">${fmt(v)}</text>`;
+            gridLines += `<line x1="${padding.left}" y1="${y}" x2="${padding.left + chartW}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-width="1" />`;
+            yLabels += `<text x="${padding.left - 10}" y="${y + 4}" font-size="12" fill="#6b6b75" text-anchor="end">${fmt(v)}</text>`;
         }
 
         let xLabels = '';
         labels.forEach((lab, i) => {
-            xLabels += `<text x="${xPos(i)}" y="${height - padding.bottom + 22}" font-size="12" fill="#6b7280" text-anchor="middle">${lab}</text>`;
+            xLabels += `<text x="${xPos(i)}" y="${height - padding.bottom + 22}" font-size="12" fill="#6b6b75" text-anchor="middle">${lab}</text>`;
         });
 
         let seriesSvg = '';
@@ -79,9 +79,9 @@ fetch("{% url 'progress_data' exercise.id %}")
                 const text = fmt(v);
                 const boxW = text.length * 7 + 8;
                 labelsSvg += `
-                    <rect x="${x - boxW/2}" y="${y - 26}" width="${boxW}" height="16" rx="4" fill="white" fill-opacity="0.9" />
+                    <rect x="${x - boxW/2}" y="${y - 26}" width="${boxW}" height="16" rx="4" fill="#242429" fill-opacity="0.9" />
                     <text x="${x}" y="${y - 14}" font-size="12" font-weight="bold" fill="${color}" text-anchor="middle">${text}</text>
-                    <circle cx="${x}" cy="${y}" r="4.5" fill="${color}" stroke="#fff" stroke-width="1.5" />
+                    <circle cx="${x}" cy="${y}" r="4.5" fill="${color}" stroke="#0a0a0b" stroke-width="1.5" />
                 `;
             });
             seriesSvg += `<polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" />${labelsSvg}`;
@@ -92,12 +92,12 @@ fetch("{% url 'progress_data' exercise.id %}")
         });
 
         const svg = `
-        <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="font-family: Tahoma, sans-serif;">
+        <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="font-family: Vazirmatn, Tahoma, sans-serif;">
             ${gridLines}
             ${yLabels}
             ${seriesSvg}
             ${xLabels}
-            <text x="${padding.left}" y="18" font-size="13" fill="#374151" font-weight="bold">${data.unit} - ${data.exercise_name}</text>
+            <text x="${padding.left}" y="18" font-size="13" fill="#ededed" font-weight="bold">${data.unit} - ${data.exercise_name}</text>
         </svg>`;
 
         document.getElementById('chartWrap').innerHTML = svg;

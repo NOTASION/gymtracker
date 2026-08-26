@@ -1,8 +1,11 @@
 {% extends 'workouts/base.html' %}
 {% block title %}نمودار پیشرفت{% endblock %}
 {% block content %}
-<h2>نمودار پیشرفت وزنه</h2>
-<p>یک حرکت را انتخاب کن تا روند افزایش وزنه‌ی آن در طول هفته‌ها را ببینی.</p>
+
+<div class="progress-header">
+    <h2>نمودار پیشرفت</h2>
+    <p class="subtitle">یک حرکت را انتخاب کن تا روند پیشرفت آن را در طول هفته‌ها ببینی</p>
+</div>
 
 {% if exercises %}
 <div class="exercise-grid">
@@ -14,6 +17,9 @@
     {% endfor %}
 </div>
 {% else %}
-<p>هنوز هیچ حرکتی اضافه نکرده‌ای.</p>
+<div class="card day-empty">
+    <div class="day-empty-icon">&#9881;</div>
+    <p>هنوز هیچ حرکتی اضافه نکرده‌ای.</p>
+</div>
 {% endif %}
 {% endblock %}

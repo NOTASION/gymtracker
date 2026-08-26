@@ -172,6 +172,27 @@ def day_program(request, day_id):
 
 
 @login_required
+@require_POST
+def reset_day(request, day_id):
+    day = get_object_or_404(WorkoutDay, id=day_id, user=request.user)
+    week_param = request.POST.get('week_start')
+    if week_param:
+        try:
+            selected_week = datetime.datetime.strptime(week_param, '%Y-%m-%d').date()
+        except ValueError:
+            selected_week = get_week_start(datetime.date.today())
+    else:
+        selected_week = get_week_start(datetime.date.today())
+
+    exercise_ids = day.exercises.values_list('id', flat=True)
+    WorkoutLog.objects.filter(
+        exercise_id__in=exercise_ids, week_start=selected_week, user=request.user
+    ).delete()
+    messages.success(request, f'اطلاعات هفته‌ی {to_jalali_str(selected_week)} پاک شد.')
+    return redirect(f"{reverse('day_program', args=[day.id])}?week={selected_week}")
+
+
+@login_required
 def progress_list(request):
     exercises = Exercise.objects.filter(user=request.user)
     return render(request, 'workouts/progress_list.html', {'exercises': exercises})

@@ -215,11 +215,25 @@
     </div>
 
     {# Desktop save button #}
-    <button type="submit" class="btn desktop-logger" style="margin-top: 16px;">ذخیره‌ی این هفته</button>
+    <div class="logger-actions desktop-logger">
+        <button type="submit" class="btn">ذخیره‌ی این هفته</button>
+        <form method="post" action="{% url 'reset_day' day.id %}"
+              onsubmit="return confirm('⚠️ تمام مقادیر ثبت‌شده‌ی این هفته برای این روز پاک خواهد شد.\n\nاین عمل قابل بازگشت نیست. آیا مطمئنی؟');">
+            {% csrf_token %}
+            <input type="hidden" name="week_start" value="{{ selected_week|date:'Y-m-d' }}">
+            <button type="submit" class="btn btn-danger">پاک کردن اطلاعات روز</button>
+        </form>
+    </div>
 
     {# Mobile sticky save bar #}
     <div class="save-bar">
-        <button type="submit" class="btn">ذخیره‌ی این هفته</button>
+        <button type="submit" class="btn">ذخیره</button>
+        <form method="post" action="{% url 'reset_day' day.id %}"
+              onsubmit="return confirm('⚠️ تمام مقادیر ثبت‌شده‌ی این هفته برای این روز پاک خواهد شد.\n\nاین عمل قابل بازگشت نیست. آیا مطمئنی؟');">
+            {% csrf_token %}
+            <input type="hidden" name="week_start" value="{{ selected_week|date:'Y-m-d' }}">
+            <button type="submit" class="btn btn-danger save-bar-reset">پاک کردن</button>
+        </form>
     </div>
 </form>
 

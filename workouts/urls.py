@@ -13,6 +13,7 @@ urlpatterns = [
     path('day/<int:day_id>/delete/', views.delete_day, name='delete_day'),
     path('day/<int:day_id>/exercises/', views.manage_exercises, name='manage_exercises'),
     path('day/<int:day_id>/', views.day_program, name='day_program'),
+    path('day/<int:day_id>/reset/', views.reset_day, name='reset_day'),
 
     path('exercise/<int:exercise_id>/delete/', views.delete_exercise, name='delete_exercise'),
 

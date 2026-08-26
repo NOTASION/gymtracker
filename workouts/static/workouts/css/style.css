@@ -242,7 +242,6 @@ p { color: var(--text-secondary); }
   color: var(--text-primary);
   font-family: var(--font);
   font-size: 0.95rem;
-  margin-bottom: 10px;
   transition: border-color var(--transition), background var(--transition);
   -webkit-appearance: none;
 }
@@ -345,7 +344,7 @@ select.input {
   margin-bottom: 0;
 }
 .day-add-panel.open {
-  max-height: 200px;
+  max-height: 280px;
   opacity: 1;
   margin-bottom: 20px;
 }
@@ -794,6 +793,15 @@ table.workout-table input.weight-input { width: 80px; }
   flex-shrink: 0;
 }
 
+/* Desktop logger actions */
+.logger-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.logger-actions .btn-danger { padding: 9px 18px; font-size: 0.85rem; }
+
 /* Sticky save bar */
 .save-bar { display: none; }
 
@@ -924,8 +932,31 @@ table.workout-table input.weight-input { width: 80px; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ===== Progress List ===== */
+.progress-header {
+  margin-bottom: 24px;
+}
+.progress-header h2 { margin-bottom: 4px; }
+.progress-header .subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.progress-back {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+.progress-back:hover { color: var(--accent-text); }
+
 /* ===== Chart ===== */
 #chartWrap svg text { fill: var(--text-secondary); }
+#chartWrap svg line[stroke="#e5e7eb"] { stroke: var(--border); }
+#chartWrap svg text[fill="#6b6280"] { fill: var(--text-muted); }
+#chartWrap svg text[fill="#374151"] { fill: var(--text-primary); }
+#chartWrap svg rect[fill="white"] { fill: var(--bg-elevated); }
 #legendWrap span { color: var(--text-secondary); }
 
 /* ===== Animations ===== */
@@ -969,6 +1000,11 @@ table.workout-table input.weight-input { width: 80px; }
     flex: 1;
     padding: 14px;
     font-size: 0.95rem;
+  }
+  .save-bar .save-bar-reset {
+    flex: 0 0 auto;
+    padding: 14px 18px;
+    font-size: 0.85rem;
   }
   .container { padding-bottom: 90px; }
 
