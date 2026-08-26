@@ -227,4 +227,22 @@
     <a href="{% url 'manage_exercises' day.id %}">+ افزودن/حذف حرکت</a> |
     <a href="{% url 'day_select' %}">بازگشت به لیست روزها</a>
 </p>
+
+<script>
+(function() {
+    var desktop = document.querySelector('.desktop-logger');
+    var mobile = document.querySelector('.mobile-logger');
+    if (!desktop || !mobile) return;
+    var mq = window.matchMedia('(max-width: 768px)');
+
+    function sync() {
+        var isMobile = mq.matches;
+        desktop.querySelectorAll('input').forEach(function(el) { el.disabled = isMobile; });
+        mobile.querySelectorAll('input').forEach(function(el) { el.disabled = !isMobile; });
+    }
+
+    sync();
+    mq.addEventListener('change', sync);
+})();
+</script>
 {% endblock %}
